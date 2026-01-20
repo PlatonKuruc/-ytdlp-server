@@ -1,6 +1,6 @@
-fastapi==0.104.1
-uvicorn==0.24.0
-yt-dlp==2024.12.23
-cloudinary==1.36.0
-python-multipart==0.0.6
-pydantic==2.5.2
+fastapi==0.109.0
+uvicorn==0.27.0
+yt-dlp
+cloudinary==1.38.0
+python-multipart==0.0.9
+pydantic==2.6.0
