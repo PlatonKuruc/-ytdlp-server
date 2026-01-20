@@ -55,10 +55,14 @@ def download_video(request: DownloadRequest):
     'merge_output_format': 'mp4',
     'quiet': True,
     'no_warnings': True,
-    'extractor_args': {'youtube': {'player_client': ['android']}},
+    'extractor_args': {'youtube': {'player_client': ['ios', 'android', 'web']}},
     'http_headers': {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 12; SM-S906N Build/QP1A.190711.020) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.43 Mobile Safari/537.36'
-    }
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+    },
+    'socket_timeout': 30,
+    'retries': 3,
+    'ignoreerrors': False,
+    'no_check_certificates': True,
 }
 
             
