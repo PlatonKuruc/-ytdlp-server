@@ -121,5 +121,3 @@ async function downloadYouTubeVideo(youtube_url) {
     video_id: renderData.video_id
   };
 }
-
-Otestuj s: https://www.youtube.com/watch?v=OQTbsQeoEng
