@@ -50,12 +50,17 @@ def download_video(request: DownloadRequest):
             output_file = os.path.join(tmpdir, "%(id)s.%(ext)s")
             
             ydl_opts = {
-                'format': format_str,
-                'outtmpl': output_file,
-                'merge_output_format': 'mp4',
-                'quiet': True,
-                'no_warnings': True,
-            }
+    'format': format_str,
+    'outtmpl': output_file,
+    'merge_output_format': 'mp4',
+    'quiet': True,
+    'no_warnings': True,
+    'extractor_args': {'youtube': {'player_client': ['android']}},
+    'http_headers': {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 12; SM-S906N Build/QP1A.190711.020) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.43 Mobile Safari/537.36'
+    }
+}
+
             
             # Download video
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
