@@ -25,6 +25,15 @@ class DownloadResponse(BaseModel):
     video_url: str = None
     video_id: str = None
     title: str = None
+    duration: int = None
+    thumbnail: str = None
+    quality: str = None
+    filesize: str = None
+    format: str = None
+    width: int = None
+    height: int = None
+    bytes: int = None
+    created_at: str = None
     error: str = None
 
 @app.get("/")
@@ -68,22 +77,30 @@ async def get_y2mate_download_url(youtube_url: str, quality: str = "720p"):
             raise Exception("Y2mate analyze failed")
         
         title = data.get("title", "video")
-        
+        duration = data.get("t")
+        thumbnail = f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg"
+
         # Find quality key
         links = data.get("links", {}).get("mp4", {})
         quality_map = {"1080p": "137", "720p": "22", "480p": "135", "360p": "18"}
-        
+
         k_value = None
+        selected_quality = None
+        selected_size = None
         for q_key, link_data in links.items():
             if quality in link_data.get("q", ""):
                 k_value = link_data.get("k")
+                selected_quality = link_data.get("q")
+                selected_size = link_data.get("size")
                 break
-        
+
         # Fallback to any available quality
         if not k_value and links:
             first_key = list(links.keys())[0]
             k_value = links[first_key].get("k")
-        
+            selected_quality = links[first_key].get("q")
+            selected_size = links[first_key].get("size")
+
         if not k_value:
             raise Exception("No download link found")
         
@@ -102,7 +119,15 @@ async def get_y2mate_download_url(youtube_url: str, quality: str = "720p"):
         
         download_url = data2.get("dlink")
         
-        return {"url": download_url, "title": title, "video_id": video_id}
+        return {
+            "url": download_url,
+            "title": title,
+            "video_id": video_id,
+            "duration": duration,
+            "thumbnail": thumbnail,
+            "quality": selected_quality,
+            "filesize": selected_size,
+        }
 
 @app.post("/download", response_model=DownloadResponse)
 async def download_video(request: DownloadRequest):
@@ -138,7 +163,16 @@ async def download_video(request: DownloadRequest):
                 success=True,
                 video_url=upload_result['secure_url'],
                 video_id=video_id,
-                title=y2mate_data["title"]
+                title=y2mate_data["title"],
+                duration=y2mate_data.get("duration"),
+                thumbnail=y2mate_data.get("thumbnail"),
+                quality=y2mate_data.get("quality"),
+                filesize=y2mate_data.get("filesize"),
+                format=upload_result.get("format"),
+                width=upload_result.get("width"),
+                height=upload_result.get("height"),
+                bytes=upload_result.get("bytes"),
+                created_at=upload_result.get("created_at"),
             )
             
     except Exception as e:
